@@ -89,11 +89,6 @@ class Graphql implements ServiceProvider {
             (\PsCs\Harmony\Graphql\Tool\GraphqlQueryInterface::class) => [self::class, 'getGraphqlQueryQueue'],
         ]; // By convention
     }
-/**
-    public static function getBillPerYear(Container $container) {
-        return BillPerYearAbstract::getType($container);
-    }
-   **/ 
     public static function getMyGraphqlQueryInterfaceImplementation(Container $container) {
         return new MyGraphqlQueryInterfaceImplementation();
     }
