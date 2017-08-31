@@ -1,0 +1,25 @@
+{
+    "name": "phps-cans/harmony-graphql-tool",
+    "description": "This package contains tools to be able to easily implement graphql in your application",
+    "keywords": ["graphql", "serviceprovider"],
+    "homepage": "https://github.com/phps-cans/harmony-graphql-tool",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Benoit Ngo",
+            "email": "ngobenoit@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "container-interop/service-provider": "~0.3.0",
+        "container-interop/container-interop": "^1.0",
+        "webonyx/graphql-php": "^0.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "PsCs\\Harmony\\Graphql\\Tool\\": "src/"
+        }
+    }
+}
