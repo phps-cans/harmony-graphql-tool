@@ -14,6 +14,11 @@ class Registry implements Container {
         $this->container = $container;
     }
 
+    private function checkClassFromName($name) {
+        return !empty($name) && class_exists($name, false) && ($interfaces = class_implements($name, false))
+        && isset($interfaces[GraphqlTypeInterface::class]);   
+    }
+
    public function get($id) {
        if ($this->container->has($id)) {
          return $this->container->get($id);
@@ -22,21 +27,17 @@ class Registry implements Container {
             return $this->typeList[$id];
        }
        $suffix = substr($id, -4);
-       if ($suffix && \strtoupper($suffix) === "TYPE" && !(class_exists($id, false) && (($interfaces = class_implements($id, false))
-       && isset($interfaces[GraphqlTypeInterface::class])) )) {
-            $className = substr($id, 0, -4);
-       }
-       else {
-           $className = $id;
-       }
-       
-       if (class_exists($className, false) 
-         && ($interfaces = class_implements($className, false))
-         && isset($interfaces[GraphqlTypeInterface::class])) { // TODO if the class does  not implement GraphqlTypeInterface, develop a discover strategy
+       $className = "";
+       if ($this->checkClassFromName($id)) {
+            $className = $id;
             $this->typeList[$id] = $className::getType($this);
             return $this->typeList[$id];
        }
-       return $this->container->get($id); // Must throw an exception
+       else if (!$suffix || \strtoupper($suffix) !== "TYPE" || !($className = substr($id, 0, -4)) || !$this->checkClassFromName($className)) {  
+           return $this->container->get($id); 
+       }
+       $this->typeList[$id] = $className::getType($this);
+       return $this->typeList[$id];
    }
 
    public function has($id) {
