@@ -19,25 +19,31 @@ class Registry implements Container {
         && isset($interfaces[GraphqlTypeInterface::class]);   
     }
 
+    private function getClassNameFromId($id): ?string {
+        if ($this->checkClassFromName($id)) {
+            return $id;
+        }
+
+       $suffix = substr($id, -4);
+       if ($suffix && \strtoupper($suffix) === "TYPE" && ($className = substr($id, 0, -4)) && $this->checkClassFromName($className)) {  
+            return $className;
+        }
+        return null;
+    }
+
    public function get($id) {
        if ($this->container->has($id)) {
          return $this->container->get($id);
        }
-       if (isset($this->typeList[$id])) {
-            return $this->typeList[$id];
+       $className = $this->getClassNameFromId($id);
+       if (!$className) {
+            return $this->container->get($id); // Must throw exception 
        }
-       $suffix = substr($id, -4);
-       $className = "";
-       if ($this->checkClassFromName($id)) {
-            $className = $id;
-            $this->typeList[$id] = $className::getType($this);
-            return $this->typeList[$id];
+       if (isset($this->typeList[$className])) {
+            return $this->typeList[$className];
        }
-       else if (!$suffix || \strtoupper($suffix) !== "TYPE" || !($className = substr($id, 0, -4)) || !$this->checkClassFromName($className)) {  
-           return $this->container->get($id); 
-       }
-       $this->typeList[$id] = $className::getType($this);
-       return $this->typeList[$id];
+       $this->typeList[$className] = $className::getType($this);
+       return $this->typeList[$className];
    }
 
    public function has($id) {
