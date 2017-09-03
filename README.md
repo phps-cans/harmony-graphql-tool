@@ -22,22 +22,26 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
 class MyType implements \PsCs\Harmony\Graphql\Tool\GraphqlTypeInterface {
-
-    protected $id = "foobaz";
-
+    public $id = "foo";
+    public function getId() {
+        return $this->id;
+    }
+    static public function resolveField(MyType $value, $args, $context, ResolveInfo $info)  {
+        switch ($info->fieldName) {
+            case 'id':
+              return $bill->getId();
+            default:
+              return null;
+        }
+    }
     static public function getType($typeRegistry): ObjectType {
         return new ObjectType([
             "name" => "MyType",
             "fields" => [
                 "id" => Type::nonNull(Type::id())
-            ]
+            ],
+            "resolveField" => [self::class, "resolveField"]
         ]);
-    }
-
-    public function graphqlSerialize() : array {
-        return [
-            "id" => $this->id
-        ];
     }
   }
 ```
@@ -51,7 +55,7 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\FieldDefinition;
 
-class MyQuery extends MydataFinder implements \PsCs\Harmony\Graphql\Tool\GraphqlQueryInterface {
+class MyGraphqlQueryInterfaceImplementation extends MydataFinder implements \PsCs\Harmony\Graphql\Tool\GraphqlQueryInterface {
 
     public function getQueryField($typeRegistry): FieldDefinition {
         $that = $this;
@@ -62,7 +66,7 @@ class MyQuery extends MydataFinder implements \PsCs\Harmony\Graphql\Tool\Graphql
                 'id' => Type::nonNull(Type::id())
             ],
             "resolve" => function($rootValue, $args) use ($that) {
-                return $that->findOneById($args["id"])->graphqlSerialize();
+                return $that->findOneById($args["id"]);
             }
         ]);
     }
