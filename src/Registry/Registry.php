@@ -15,7 +15,7 @@ class Registry implements Container {
     }
 
     private function checkClassFromName($name) {
-        return !empty($name) && class_exists($name, false) && ($interfaces = class_implements($name, false))
+        return !empty($name) && class_exists($name) && ($interfaces = class_implements($name))
         && isset($interfaces[GraphqlTypeInterface::class]);   
     }
 
