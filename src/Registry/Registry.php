@@ -4,7 +4,7 @@ namespace PsCs\Harmony\Graphql\Tool\Registry;
 use Interop\Container\ContainerInterface as Container;
 use PsCs\Harmony\Graphql\Tool\GraphqlTypeInterface;
 
-class Registry implements Container {
+class Registry {
 
     protected $container;
 
