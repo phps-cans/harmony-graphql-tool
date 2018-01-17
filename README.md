@@ -154,4 +154,4 @@ This package attempt to make easy the use of the library with service provider. 
 
 ## TODO
 
-Implements type discovery usin doctrine's annotation
+Implements type discovery using doctrine's annotation
