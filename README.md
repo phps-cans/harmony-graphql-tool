@@ -73,6 +73,33 @@ class MyGraphqlQueryInterfaceImplementation extends MydataFinder implements \PsC
   }
 ```
 
+Alternatively, you can create an object which returns multiple query: 
+
+```php
+namespace Foo;
+
+use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\Type;
+use GraphQL\Type\Definition\FieldDefinition;
+
+class MyGraphqlQueriesInterfaceImplementation extends MydataFinder implements \PsCs\Harmony\Graphql\Tool\GraphqlQueriesInterface {
+
+    public function getQueryField($typeRegistry): array {
+        $that = $this;
+        return [FieldDefinition::create([
+            "name" => "billPerYear",
+            "type" => $typeRegistry->get((MyType::class)."Type"),
+            'args'    => [
+                'id' => Type::nonNull(Type::id())
+            ],
+            "resolve" => function($rootValue, $args) use ($that) {
+                return $that->findOneById($args["id"]);
+            }
+        ])];
+    }
+  }
+```
+
 - Then create your serviceProvider
 
 ```php
