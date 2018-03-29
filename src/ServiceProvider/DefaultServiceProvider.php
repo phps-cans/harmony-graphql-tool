@@ -7,14 +7,16 @@ use GraphQL\Type\Schema;
 
 use Interop\Container\ContainerInterface as Container;
 use GraphQL\Server\StandardServer;
+use Interop\Container\ServiceProviderInterface;
 use PsCs\Harmony\Graphql\Tool\GraphqlQueryInterface;
 use PsCs\Harmony\Graphql\Tool\GraphqlQueriesInterface;
 use PsCs\Harmony\Graphql\Tool\GraphqlTypeInterface;
 use PsCs\Harmony\Graphql\Tool\Registry\Registry;
 use PsCs\Harmony\Graphql\Tool\Factory\WebonyxSchemaFactory;
 
-class DefaultServiceProvider implements ServiceProvider {
- public function getServices()
+class DefaultServiceProvider implements ServiceProviderInterface {
+
+    public function getFactories()
     {
         return [
             (GraphqlQueryInterface::class) => [self::class, 'getGraphqlQueryQueue'],
@@ -67,4 +69,25 @@ class DefaultServiceProvider implements ServiceProvider {
         return new WebonyxSchemaFactory($container->get(Registry::class));
     }
 
+    /**
+     * Returns a list of all container entries extended by this service provider.
+     *
+     * - the key is the entry name
+     * - the value is a callable that will return the modified entry
+     *
+     * Callables have the following signature:
+     *        function(Psr\Container\ContainerInterface $container, $previous)
+     *     or function(Psr\Container\ContainerInterface $container, $previous = null)
+     *
+     * About factories parameters:
+     *
+     * - the container (instance of `Psr\Container\ContainerInterface`)
+     * - the entry to be extended. If the entry to be extended does not exist and the parameter is nullable, `null` will be passed.
+     *
+     * @return callable[]
+     */
+    public function getExtensions()
+    {
+        return [];
+    }
 }
