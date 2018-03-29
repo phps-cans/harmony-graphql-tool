@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "container-interop/service-provider": "~0.3.0",
+        "container-interop/service-provider": "~0.4.0",
         "container-interop/container-interop": "^1.0",
         "webonyx/graphql-php": "^0.10"
     },
